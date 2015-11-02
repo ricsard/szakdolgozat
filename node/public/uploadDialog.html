@@ -1,0 +1,20 @@
+<md-toolbar class="md-warn">
+    <div class="md-toolbar-tools">
+        <h2 class="md-flex">Upload a sound</h2>
+    </div>
+    <md-content flex layout-padding>
+        <form name="registerForm" ng-submit="upload()">
+            <md-input-container>
+                <label>Filename</label>
+                <input type="text" name="filename" ng-model="filename" required>
+            </md-input-container>
+            <md-input-container>
+                <md-button class="md-raised md-primary" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="file" name="file">Select</md-button>
+                <label>{{file.name}}</label>
+            </md-input-container>
+            <md-input-container>
+                <md-button class="md-raised md-primary" type="submit">Upload</md-button>
+            </md-input-container>
+        </form>
+    </md-content>
+</md-toolbar>

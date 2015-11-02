@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <% include header.html %>
+  <body ng-app="szakdolgozat" ng-controller="RegisterCtrl">
+    <md-content class="md-padding">
+       <md-card>
+         <md-card-content>
+           <h2 class="md-title">Registration</h2>
+           <form name="registerForm" ng-submit="sendRegister()">
+             <md-input-container>
+               <label>First Name</label>
+               <input type="text" name="firstName" ng-model="regObj.firstName" required>
+             </md-input-container>
+             <md-input-container>
+               <label>Last Name</label>
+               <input type="text" name="lastName" ng-model="regObj.lastName" required>
+             </md-input-container>
+             <md-input-container>
+               <label>Username</label>
+               <input type="text" name="username" ng-model="regObj.username" required>
+             </md-input-container>
+             <md-input-container>
+               <label>Password</label>
+               <input type="password" name="password" ng-model="regObj.password" required>
+             </md-input-container>
+             <md-input-container>
+               <md-switch id="gender" class="md-primary md-block" md-no-ink aria-label="Gender"  ng-model="gender" ng-change="genderOnChange(gender)">
+                 Gender: {{regObj.gender}}
+               </md-switch>
+             </md-input-container>
+             <md-button type="submit">Register</md-button>
+           </form>
+         </md-card-content>
+       </md-card>
+    </md-content>
+  </body>
+</html>

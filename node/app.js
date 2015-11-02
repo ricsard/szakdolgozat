@@ -9,9 +9,12 @@ var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/szakdoga');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var upload = require('./routes/upload');
+//var routes = require('./routes/index');
+
+
+var dbConfig = require('./db.js');
+var mongoose = require('mongoose');
+mongoose.connect(dbConfig.url);
 
 var app = express();
 // view engine setup
@@ -31,6 +34,27 @@ app.use(function(req,res,next){
   req.db = db;
   next();
 });
+
+
+// Configuring Passport
+var passport = require('passport');
+var session = require('express-session');
+app.use(session({secret: 'mySecretKey'}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Using the flash middleware provided by connect-flash to store messages in session
+// and displaying in templates
+var flash = require('connect-flash');
+app.use(flash());
+
+// Initialize Passport
+var initPassport = require('./passport/init');
+initPassport(passport);
+
+var routes = require('./routes/index')(passport);
+var users = require('./routes/users');
+var upload = require('./routes/upload');
 
 app.use('/', routes);
 app.use('/users', users);
