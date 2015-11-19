@@ -2,10 +2,60 @@
  * Created by Ricsard on 2015. 11. 02..
  */
 var app = angular.module('szakdolgozat');
-app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast){
+app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast, SessionService){
 
     $scope.sounds = [];
     getSounds();
+
+
+    $scope.signedInUser = SessionService.getSignedInUser();
+    $scope.menu = [];
+    setupMenu();
+
+    var OverrideException = {
+        name: "OverrideMethodException",
+        message: "Override this method"
+    };
+
+    function or() {
+        throw OverrideException;
+    }
+
+    function setupMenu() {
+        if($scope.signedInUser.role === 'patient') {
+            $scope.menu.push({
+                subheader: 'Patient menu',
+                elements: [
+                    {title: "Search doctor", click: openSearchUser},
+                    {title: "Menu2", click: or}
+                ]
+            });
+        } else if($scope.signedInUser.role === 'doctor') {
+            $scope.menu.push({
+                subheader: 'Doctor menu',
+                elements: [
+                    {title: "Register patient", click: openRegisterPatient},
+                    {title: "Search patient", click: openSearchUser}
+                ]
+            });
+        } else if($scope.signedInUser.role === 'researcher') {
+            $scope.menu.push({
+                subheader: 'Researcher menu',
+                elements: [
+                    {title: "Menu1", click: or},
+                    {title: "Menu2", click: or}
+                ]
+            });
+        }
+    }
+
+    function openRegisterPatient() {
+        $window.location.href = '/signup/patient';
+    }
+
+    function openSearchUser() {
+        $window.location.href = '/search/user';
+    }
 
     function getSounds() {
         $http.get('/sound')
@@ -27,6 +77,8 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast)
                 console.log(err);
             })
     };
+
+
 
     $scope.uploadAudio = function () {
         $mdDialog.show({
@@ -57,6 +109,7 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast)
             .success(function(data) {
                 console.log(data);
                 $window.location.href = data.page;
+                SessionService.removeSignedInUser();
             })
             .error(function(err) {
                 console.log(err);

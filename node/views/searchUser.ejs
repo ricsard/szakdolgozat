@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<% include header.html %>
+<body ng-app="szakdolgozat" ng-controller="HomeCtrl">
+<% include topToolbar.ejs %>
+<div layout="column" ng-cloak style="height: 100%; overflow-y: scroll;">
+  <section layout="row" flex>
+    <% include leftSidebar.ejs %>
+    <md-content flex layout-padding ng-controller="SearchUserCtrl">
+      <div layout="column" layout-fill layout-align="top center">
+        <md-input-container>
+          <label>Search user</label>
+          <input ng-model="search.text" type="text" />
+        </md-input-container>
+        <md-list>
+          <md-list-item ng-repeat="user in results" ng-click="openProfilePage(user.userId)">
+            <md-button class="md-fab md-primary" aria-label="{{ user.getFullName() }}">
+              {{user.firstName[0]}}
+            </md-button>
+            <div class="md-list-item-text" layout="column">
+              <p>{{ user.getFullName() }}</p>
+            </div>
+          </md-list-item>
+        </md-list>
+      </div>
+    </md-content>
+  </section>
+</div>
+</body>
+</html>

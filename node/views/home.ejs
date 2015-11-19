@@ -2,36 +2,32 @@
 <html>
 <% include header.html %>
 <body ng-app="szakdolgozat" ng-controller="HomeCtrl">
-<md-content class="md-padding">
-</md-content>
-<md-card>
-    <md-card-content>
-        <h2 class="md-title">Home</h2>
+    <% include topToolbar.ejs %>
+    <div layout="column" ng-cloak style="height: 100%; overflow-y: scroll;">
+        <section layout="row" flex>
+            <% include leftSidebar.ejs %>
+            <md-content flex layout-padding>
+                <div layout="column" layout-fill layout-align="top center">
+                    <md-button ng-click="uploadAudio()">Upload an audio file</md-button>
+                    <md-list>
+                        <md-list-item class="md-3-line" ng-repeat="sound in sounds">
+                            <md-button class="md-fab material-icons" aria-label="Comment" ng-click="getSound(sound)">
+                                equalizer
+                            </md-button>
+                            <div class="md-list-item-text" layout="column">
+                                <h3>{{ sound.name }}</h3>
+                            </div>
+                            <!--<audio controls>-->
+                            <!--<source ng-src="sound/file/{{sound._id}}" type="audio/mp3">-->
+                            <!--Your browser does not support the audio element.-->
+                            <!--</audio>-->
+                        </md-list-item>
+                    </md-list>
+                </div>
+                <div flex></div>
+            </md-content>
 
-        <md-button ng-click="uploadAudio()">Upload an audio file</md-button>
-
-        <md-button ng-click="logout()">Logout</md-button>
-    </md-card-content>
-</md-card>
-
-<md-content>
-    <md-list>
-        <md-list-item class="md-3-line" ng-repeat="sound in sounds">
-            <!--<img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />-->
-            <md-button class="md-fab material-icons" aria-label="Comment" ng-click="getSound(sound)">
-                equalizer
-            </md-button>
-            <div class="md-list-item-text" layout="column">
-                <h3>{{ sound.name }}</h3>
-            </div>
-            <audio controls>
-                <source ng-src="sound/file/{{sound._id}}" type="audio/mp3">
-                Your browser does not support the audio element.
-            </audio>
-        </md-list-item>
-    </md-list>
-</md-content>
-
-
+        </section>
+    </div>
 </body>
 </html>

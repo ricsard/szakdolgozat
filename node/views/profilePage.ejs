@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<% include header.html %>
+<body ng-app="szakdolgozat" ng-controller="HomeCtrl">
+<% include topToolbar.ejs %>
+<!-- Hidden field for userId -->
+<input style="display: none" id="userId" value="<%= userId %>" />
+
+<div layout="column" ng-cloak style="height: 100%; overflow-y: scroll;">
+  <section layout="row" flex>
+    <% include leftSidebar.ejs %>
+    <md-content flex layout-padding ng-controller="ProfileCtrl">
+      <div layout="column" layout-fill layout-align="top center">
+        <md-toolbar>
+          <div class="md-toolbar-tools">
+            <md-button ng-click="changeTab('profile')">
+              <span>Profile</span>
+            </md-button>
+            <md-button ng-click="changeTab('inspections')">
+              <span>Inspections</span>
+            </md-button>
+          </div>
+        </md-toolbar>
+
+        <form ng-if="activeTab === 'profile'" name="profileForm">
+          <md-input-container>
+            <label>First Name</label>
+            <input type="text" name="firstName" ng-model="profileUser.firstName" ng-disabled="true">
+          </md-input-container>
+          <md-input-container>
+            <label>Last Name</label>
+            <input type="text" name="lastName" ng-model="profileUser.lastName" ng-disabled="true">
+          </md-input-container>
+          <md-input-container>
+            <label>Username</label>
+            <input type="text" name="username" ng-model="profileUser.username" ng-disabled="true">
+          </md-input-container>
+          <md-input-container>
+            <label>Gender</label>
+            <input type="text" name="gender" ng-model="profileUser.gender" ng-disabled="true">
+          </md-input-container>
+        </form>
+
+        <div ng-if="activeTab === 'inspections'">
+          <md-button style="width: 100%;" ng-click="addNewInspection()">
+            <span>Add new inspection</span>
+          </md-button>
+          <md-divider></md-divider>
+          <md-subheader class="md-primary">Existing inspections</md-subheader>
+          <md-divider></md-divider>
+          <md-list>
+            <md-list-item ng-if="inspections.length == 0">
+              <p>There's no inspections yet</p>
+            </md-list-item>
+            <md-list-item ng-repeat="inspection in inspections">
+              <p>{{ inspection.name }}</p>
+            </md-list-item>
+            <md-divider></md-divider>
+          </md-list>
+        </div>
+
+      </div>
+    </md-content>
+  </section>
+</div>
+</body>
+</html>

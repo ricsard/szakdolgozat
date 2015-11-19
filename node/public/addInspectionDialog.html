@@ -1,0 +1,58 @@
+<md-dialog style="width: 80%;">
+    <md-dialog-content>
+        <md-toolbar class="md-warn">
+            <div class="md-toolbar-tools">
+                <h2 class="md-flex">Add new inspection</h2>
+            </div>
+        </md-toolbar>
+        <md-content flex layout-padding>
+            <form name="newInspectionForm" ng-submit="saveInspection()">
+                <md-subheader>Inspection details</md-subheader>
+                <md-input-container>
+                    <label>Name</label>
+                    <input type="text" name="name" ng-model="inspection.name" required>
+                </md-input-container>
+                <md-input-container>
+                    <label>Diagnosis</label>
+                    <textarea rows="4" name="diagnosis" ng-model="inspection.diagnosis" required></textarea>
+                </md-input-container>
+                <md-input-container>
+                    <label>Treatment</label>
+                    <textarea rows="4" name="treatment" ng-model="inspection.treatment" required></textarea>
+                </md-input-container>
+                <md-input-container>
+                    <label>Comment</label>
+                    <textarea rows="4" name="comment" ng-model="inspection.comment" required></textarea>
+                </md-input-container>
+                <md-divider></md-divider>
+                <md-subheader>Upload sound</md-subheader>
+                <md-input-container>
+                    <label>Filename</label>
+                    <input type="text" name="filename" ng-model="filename" required>
+                </md-input-container>
+                <md-input-container>
+                    <md-button class="md-raised md-primary" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="file" name="file">Select a sound file</md-button>
+                    <label>{{file.name}}</label>
+                </md-input-container>
+                <md-input-container>
+                    <md-button class="md-raised md-warn" type="submit">Upload</md-button>
+                </md-input-container>
+                <md-divider></md-divider>
+                <md-subheader>Upload attachment(s)</md-subheader>
+                <md-input-container>
+                    <md-button class="md-raised md-primary" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="file" name="file">Select a file</md-button>
+                    <label>{{file.name}}</label>
+                </md-input-container>
+                <md-input-container>
+                    <md-button class="md-raised md-warn" type="submit">Upload</md-button>
+                </md-input-container>
+                <md-divider></md-divider>
+                <md-input-container>
+                    <md-button class="md-raised" type="submit">
+                        <span>Save inspection</span>
+                    </md-button>
+                </md-input-container>
+            </form>
+        </md-content>
+    </md-dialog-content>
+</md-dialog>

@@ -28,6 +28,11 @@
                  Gender: {{regObj.gender}}
                </md-switch>
              </md-input-container>
+             <md-input-container>
+               <md-switch id="gender" class="md-primary md-block" md-no-ink aria-label="Role"  ng-model="role" ng-change="roleOnChange(role)">
+                 Role: {{regObj.role}}
+               </md-switch>
+             </md-input-container>
              <md-button type="submit">Register</md-button>
            </form>
          </md-card-content>

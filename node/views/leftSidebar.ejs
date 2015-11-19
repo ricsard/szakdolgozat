@@ -1,0 +1,18 @@
+<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+  <md-toolbar class="md-theme-indigo">
+    <span class="md-toolbar-tools" style="font-size: 12px;">{{signedInUser.role.toUpperCase()}}</span>
+  </md-toolbar>
+  <md-content layout-padding>
+    <md-list ng-cloak ng-repeat="menuItem in menu">
+      <md-subheader class="md-no-sticky">{{menuItem.subheader}}</md-subheader>
+      <md-list-item ng-repeat="element in menuItem.elements" ng-click="element.click()">
+        <p> {{element.title}} </p>
+      </md-list-item>
+      <md-divider></md-divider>
+      <!--<md-subheader class="md-no-sticky">Second menus</md-subheader>-->
+      <!--<md-list-item>-->
+      <!--<p> Second </p>-->
+      <!--</md-list-item>-->
+    </md-list>
+  </md-content>
+</md-sidenav>

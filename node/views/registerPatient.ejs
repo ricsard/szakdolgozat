@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<% include header.html %>
+<body ng-app="szakdolgozat" ng-controller="HomeCtrl">
+<% include topToolbar.ejs %>
+<div layout="column" ng-cloak style="height: 100%; overflow-y: scroll;">
+  <section layout="row" flex>
+    <% include leftSidebar.ejs %>
+    <md-content flex layout-padding ng-controller="RegisterPatientCtrl">
+      <div layout="column" layout-fill layout-align="top center">
+        <form name="registerForm" ng-submit="registerPatient()">
+          <md-input-container>
+            <label>First Name</label>
+            <input type="text" name="firstName" ng-model="patient.firstName" required>
+          </md-input-container>
+          <md-input-container>
+            <label>Last Name</label>
+            <input type="text" name="lastName" ng-model="patient.lastName" required>
+          </md-input-container>
+          <md-input-container>
+            <label>Username</label>
+            <input type="text" name="username" ng-model="patient.username" required>
+          </md-input-container>
+          <md-input-container>
+            <label>Password</label>
+            <input type="password" name="password" ng-model="patient.password" required>
+          </md-input-container>
+          <md-input-container>
+            <md-switch id="gender" class="md-primary md-block" md-no-ink aria-label="Gender"  ng-model="gender" ng-change="genderOnChange(gender)">
+              Gender: {{patient.gender}}
+            </md-switch>
+          </md-input-container>
+          <md-button type="submit">Add Patient</md-button>
+        </form>
+      </div>
+    </md-content>
+  </section>
+</div>
+</body>
+</html>

@@ -6,11 +6,13 @@ app.controller('RegisterCtrl', function($scope, $http, $window){
 
     $scope.regObj = {};
     $scope.regObj.gender = 'female';
+    $scope.regObj.role = 'doctor';
 
     $scope.sendRegister = function() {
         console.log("REG");
         console.log($scope.regObj);
 
+        $scope.regObj.doctors = [];
         $http.post('/signup', $scope.regObj)
             .success(function(data) {
                 console.log(data);
@@ -26,6 +28,14 @@ app.controller('RegisterCtrl', function($scope, $http, $window){
             $scope.regObj.gender = 'male';
         } else {
             $scope.regObj.gender = 'female';
+        }
+    };
+
+    $scope.roleOnChange = function (it) {
+        if(it) {
+            $scope.regObj.role = 'researcher';
+        } else {
+            $scope.regObj.role = 'doctor';
         }
     };
 });
