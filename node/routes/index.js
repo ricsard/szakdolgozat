@@ -282,6 +282,26 @@ module.exports = function(passport){
   });
 
   /*************************************************
+   MYPATIENTS
+   *************************************************/
+  /* Get myPatients page GET */
+  router.get('/myPatients', isAuthenticated, hasDoctorLevel, function(req, res) {
+    res.render('myPatients');
+  });
+
+  /* List myPatients as a doctor GET */
+  router.get('/myPatients/list', isAuthenticated, hasDoctorLevel, function(req, res) {
+    User.find({ doctors: req.user._id }, function(err, patients) {
+      if (err){
+        sendError(req, res, 'Error in list myPatients', err);
+      }
+      console.log('MyPatients list was successful');
+      res.status(200);
+      res.json({results: patients});
+    });
+  });
+
+  /*************************************************
    SOUND
    *************************************************/
   /* List sounds */

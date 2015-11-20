@@ -35,7 +35,8 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast,
                 subheader: 'Doctor menu',
                 elements: [
                     {title: "Register patient", click: openRegisterPatient},
-                    {title: "Search patient", click: openSearchUser}
+                    {title: "Search patient", click: openSearchUser},
+                    {title: "My patients", click: openMyPatients}
                 ]
             });
         } else if($scope.signedInUser.role === 'researcher') {
@@ -55,6 +56,10 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast,
 
     function openSearchUser() {
         $window.location.href = '/search/user';
+    }
+
+    function openMyPatients() {
+        $window.location.href = '/myPatients';
     }
 
     function getSounds() {
