@@ -1,11 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
+var path = require('path');
 
 var multerUp = multer({ dest: './sound/' });
+var attachmentUpload = multer({ dest: './attachments/' });
 var Sound = require('../models/sound');
 var User = require('../models/user');
 var Inspection = require('../models/inspection');
+var Attachment = require('../models/attachment');
 var fs = require('fs');
 var bCrypt = require('bcrypt-nodejs');
 
@@ -155,7 +158,7 @@ module.exports = function(passport){
 
   /* GET Home Page */
   router.get('/home', isAuthenticated, function(req, res){
-    res.render('home', { user: req.user });
+    res.render('home', { user: req.user, soundId: '564c6511b463e2cc225fa08c' });
   });
 
   /* Handle Logout */
@@ -304,8 +307,42 @@ module.exports = function(passport){
   /*************************************************
    SOUND
    *************************************************/
-  /* List sounds */
-  router.get('/sound', function(req, res) {
+  /* Upload a sound */
+  router.post('/sound/upload', multerUp.single('file'), function(req, res, next) {
+    var data = JSON.parse(req.body.data);
+    var sound = new Sound();
+
+    sound.filename = req.file.filename;
+    sound.mimetype = req.file.mimetype;
+    sound.ownerId = req.user._id;
+    sound.name = data.name;
+
+    sound.save(function(err) {
+      if (err){
+        console.log('Error in Saving sound: '+err);
+        res.status(500);
+        res.send(JSON.stringify({err: err}));
+      }
+      console.log('Sound save was successful');
+      res.status(200);
+      res.send(JSON.stringify(sound));
+    });
+  });
+
+  /* Get sounds list page GET */
+  router.get('/sounds', function(req, res) {
+    Sound.find({}, function (err, sounds) {
+      if (err){
+        console.log('Error in querying sound: '+err);
+        res.status(500);
+        res.send(JSON.stringify({err: err}));
+      }
+      res.render('soundsList', {sounds: sounds});
+    });
+  });
+
+  /* List sounds GET */
+  router.get('/sound/list', function(req, res) {
     Sound.find({}, function (err, sounds) {
       if (err){
         console.log('Error in querying sound: '+err);
@@ -313,11 +350,11 @@ module.exports = function(passport){
         res.send(JSON.stringify({err: err}));
       }
       res.status(200);
-      res.send(sounds);
+      res.json(sounds);
     });
   });
 
-  /* Get one sound by id */
+  /* Get one sound metadata by id */
   router.get('/sound/:id', function(req, res) {
     Sound.findOne({_id: req.params.id}, function (err, sound) {
       if (err){
@@ -330,70 +367,42 @@ module.exports = function(passport){
     });
   });
 
-  /* Get one sound by id */
+  /* Get one soundFile by id */
   router.get('/sound/file/:id', function(req, res) {
-
-    console.log('GET SOUND');
-    console.log(req.params.id);
-
     Sound.findOne({_id: req.params.id}, function (err, sound) {
       if (err){
         console.log('Error in querying sound: '+err);
         res.status(500);
         res.send(JSON.stringify({err: err}));
+      } else {
+        res.sendFile(path.join(__dirname, '../sound', sound.filename));
       }
-
-      res.sendfile('./sound/' + sound.filename);
-
-      //fs.readFile('./sound/' + sound.filename, function(error, content) {
-      //  if (error) {
-      //    //res.writeHead(500);
-      //    res.status(500);
-      //    res.send();
-      //  }
-      //  else {
-      //    //res.writeHead(200, { 'Content-Type': 'audio/mp3' });
-      //    res.sendfile(content, 'binary');
-      //  }
-      //});
-      //res.status(200);
-      //res.send(sound);
     });
   });
 
-  /* Upload an audio */
-  router.post('/sound/upload', multerUp.single('file'), function(req, res, next) {
-    console.log("File upload start");
-    //console.log(req.file);
-    //console.log(req.body);
-    //console.log(req.user);
-
+  /*************************************************
+   ATTACHMENT
+   *************************************************/
+  /* Upload an attachment */
+  router.post('/attachment/upload', attachmentUpload.single('file'), function(req, res, next) {
     var data = JSON.parse(req.body.data);
+    var attachment = new Attachment();
 
-    var sound = new Sound();
+    attachment.filename = req.file.filename;
+    attachment.mimetype = req.file.mimetype;
+    attachment.ownerId = req.user._id;
+    attachment.name = data.name;
 
-    sound.filename = req.file.filename;
-    sound.mimetype = req.file.mimetype;
-    sound.ownerId = req.user._id;
-    sound.name = data.name;
-
-    //console.log('------------');
-    //console.log(sound);
-
-    sound.save(function(err) {
+    attachment.save(function(err) {
       if (err){
-        console.log('Error in Saving sound: '+err);
+        console.log('Error in Saving attachment: '+err);
         res.status(500);
         res.send(JSON.stringify({err: err}));
       }
-      console.log('Sound save was successful');
+      console.log('Attachment save was successful');
       res.status(200);
-      res.send(JSON.stringify(sound));
+      res.json(attachment);
     });
-
-    console.log("File upload done");
-    //res.status(200);
-    //res.send(JSON.stringify(sound));
   });
 
   return router;

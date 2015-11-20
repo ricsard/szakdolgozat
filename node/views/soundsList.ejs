@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<% include header.html %>
+<body ng-app="szakdolgozat" ng-controller="HomeCtrl">
+<% include topToolbar.ejs %>
+<div layout="column" ng-cloak style="height: 100%; overflow-y: scroll;">
+  <section layout="row" flex>
+    <% include leftSidebar.ejs %>
+    <md-content flex layout-padding>
+      <div layout="column" layout-fill layout-align="top center">
+        <!--<md-button ng-click="uploadAudio()">Upload an audio file</md-button>-->
+        <md-list>
+          <% for(var i=0; i<sounds.length; i++) {%>
+          <md-list-item>
+            <div layout-fill layout="row" layout-align="space-between center">
+              <div>
+                <span class="material-icons">audiotrack</span>
+              </div>
+              <div>
+                <md-subheader class="md-primary"><%=sounds[i].name%></md-subheader>
+              </div>
+              <div>
+                <audio controls="controls" preload="none">
+                  <source ng-src="sound/file/<%= sounds[i]._id %>" type="audio/mp3">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            </div>
+          </md-list-item>
+          <md-divider></md-divider>
+          <% } %>
+        </md-list>
+      </div>
+      <div flex></div>
+    </md-content>
+
+  </section>
+</div>
+</body>
+</html>

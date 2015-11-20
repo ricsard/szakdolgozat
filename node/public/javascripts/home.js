@@ -5,7 +5,7 @@ var app = angular.module('szakdolgozat');
 app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast, SessionService){
 
     $scope.sounds = [];
-    getSounds();
+    //getSounds();
 
 
     $scope.signedInUser = SessionService.getSignedInUser();
@@ -36,7 +36,8 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast,
                 elements: [
                     {title: "Register patient", click: openRegisterPatient},
                     {title: "Search patient", click: openSearchUser},
-                    {title: "My patients", click: openMyPatients}
+                    {title: "My patients", click: openMyPatients},
+                    {title: "Sounds", click: openSounds}
                 ]
             });
         } else if($scope.signedInUser.role === 'researcher') {
@@ -62,51 +63,55 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast,
         $window.location.href = '/myPatients';
     }
 
-    function getSounds() {
-        $http.get('/sound')
-            .success(function(data) {
-                console.log(data);
-                $scope.sounds = data;
-            })
-            .error(function(err) {
-                console.log(err);
-            })
+    function openSounds() {
+        $window.location.href = '/sounds';
     }
 
-    $scope.getSound = function (sound) {
-        $http.get('/sound/file/' + sound._id)
-            .success(function(data) {
-                console.log(data);
-            })
-            .error(function(err) {
-                console.log(err);
-            })
-    };
-
-
-
-    $scope.uploadAudio = function () {
-        $mdDialog.show({
-            //parent: parentEl,
-            //targetEvent: $event,
-            clickOutsideToClose: true,
-            templateUrl: './uploadDialog.html',
-            //locals: {
-            //    items: $scope.items
-            //},
-            controller: 'UploadDialogController'
-        }).then(function(answer) {
-            $mdToast.show(
-                $mdToast.simple()
-                    .content(answer)
-            );
-        }, function() {
-            $mdToast.show(
-                $mdToast.simple()
-                    .content('Cancelled')
-            );
-        });
-    };
+    //function getSounds() {
+    //    $http.get('/sound')
+    //        .success(function(data) {
+    //            console.log(data);
+    //            $scope.sounds = data;
+    //        })
+    //        .error(function(err) {
+    //            console.log(err);
+    //        })
+    //}
+    //
+    //$scope.getSound = function (sound) {
+    //    $http.get('/sound/file/' + sound._id)
+    //        .success(function(data) {
+    //            console.log(data);
+    //        })
+    //        .error(function(err) {
+    //            console.log(err);
+    //        })
+    //};
+    //
+    //
+    //
+    //$scope.uploadAudio = function () {
+    //    $mdDialog.show({
+    //        //parent: parentEl,
+    //        //targetEvent: $event,
+    //        clickOutsideToClose: true,
+    //        templateUrl: './uploadDialog.html',
+    //        //locals: {
+    //        //    items: $scope.items
+    //        //},
+    //        controller: 'UploadDialogController'
+    //    }).then(function(answer) {
+    //        $mdToast.show(
+    //            $mdToast.simple()
+    //                .content(answer)
+    //        );
+    //    }, function() {
+    //        $mdToast.show(
+    //            $mdToast.simple()
+    //                .content('Cancelled')
+    //        );
+    //    });
+    //};
     
     $scope.logout = function() {
         console.log("LOGOUT");

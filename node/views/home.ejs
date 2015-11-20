@@ -8,21 +8,7 @@
             <% include leftSidebar.ejs %>
             <md-content flex layout-padding>
                 <div layout="column" layout-fill layout-align="top center">
-                    <md-button ng-click="uploadAudio()">Upload an audio file</md-button>
-                    <md-list>
-                        <md-list-item class="md-3-line" ng-repeat="sound in sounds">
-                            <md-button class="md-fab material-icons" aria-label="Comment" ng-click="getSound(sound)">
-                                equalizer
-                            </md-button>
-                            <div class="md-list-item-text" layout="column">
-                                <h3>{{ sound.name }}</h3>
-                            </div>
-                            <!--<audio controls>-->
-                            <!--<source ng-src="sound/file/{{sound._id}}" type="audio/mp3">-->
-                            <!--Your browser does not support the audio element.-->
-                            <!--</audio>-->
-                        </md-list-item>
-                    </md-list>
+                    <md-subheader>Hello</md-subheader>
                 </div>
                 <div flex></div>
             </md-content>
