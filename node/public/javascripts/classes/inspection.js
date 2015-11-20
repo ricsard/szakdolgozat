@@ -3,7 +3,20 @@
  */
 var app = angular.module('szakdolgozat');
     app.factory( "Inspection", function() {
-        // Define the constructor function.
+
+        /**
+         * Constructor
+         * @param inspectionId
+         * @param userId
+         * @param name
+         * @param diagnosis
+         * @param treatment
+         * @param comment
+         * @param sounds
+         * @param attachments
+         * @param doctors
+         * @constructor
+         */
         function Inspection( inspectionId, userId, name, diagnosis, treatment, comment, sounds, attachments, doctors ) {
             if(inspectionId != undefined) {
                 this.inspectionId = inspectionId;
@@ -30,10 +43,6 @@ var app = angular.module('szakdolgozat');
             }
         }
 
-        /*
-         Define the "instance" methods using the prototype
-         and standard prototypal inheritance.
-         */
         Inspection.prototype = {
             transformToSend: function() {
                 var tmp = angular.copy(this);
@@ -42,17 +51,6 @@ var app = angular.module('szakdolgozat');
             }
         };
 
-        /*
-         Define the "class" / "static" methods. These are
-         utility methods on the class itself; they do not
-         have access to the "this" reference.
-         */
-        Inspection.noop = function() {};
-
-        /*
-         Return constructor - this is what defines the actual
-         injectable in the DI framework.
-         */
         return( Inspection );
 
     });
