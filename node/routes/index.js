@@ -308,7 +308,7 @@ module.exports = function(passport){
    SOUND
    *************************************************/
   /* Upload a sound */
-  router.post('/sound/upload', multerUp.single('file'), function(req, res, next) {
+  router.post('/sound/upload', isAuthenticated, multerUp.single('file'), function(req, res, next) {
     var data = JSON.parse(req.body.data);
     var sound = new Sound();
 
@@ -330,7 +330,7 @@ module.exports = function(passport){
   });
 
   /* Get sounds list page GET */
-  router.get('/sounds', function(req, res) {
+  router.get('/sounds', isAuthenticated, function(req, res) {
     Sound.find({}, function (err, sounds) {
       if (err){
         console.log('Error in querying sound: '+err);
@@ -342,7 +342,7 @@ module.exports = function(passport){
   });
 
   /* List sounds GET */
-  router.get('/sound/list', function(req, res) {
+  router.get('/sound/list', isAuthenticated, function(req, res) {
     Sound.find({}, function (err, sounds) {
       if (err){
         console.log('Error in querying sound: '+err);
@@ -355,7 +355,7 @@ module.exports = function(passport){
   });
 
   /* Get one sound metadata by id */
-  router.get('/sound/:id', function(req, res) {
+  router.get('/sound/:id', isAuthenticated, function(req, res) {
     Sound.findOne({_id: req.params.id}, function (err, sound) {
       if (err){
         console.log('Error in querying sound: '+err);
@@ -368,7 +368,7 @@ module.exports = function(passport){
   });
 
   /* Get one soundFile by id */
-  router.get('/sound/file/:id', function(req, res) {
+  router.get('/sound/file/:id', isAuthenticated, function(req, res) {
     Sound.findOne({_id: req.params.id}, function (err, sound) {
       if (err){
         console.log('Error in querying sound: '+err);
@@ -380,11 +380,26 @@ module.exports = function(passport){
     });
   });
 
+  /* Delete a sound by id DELETE */
+  router.delete('/sound/delete/:id', isAuthenticated, function(req, res, next) {
+    Sound.findOneAndRemove({ _id: req.params.id }, function(err, sound) {
+      if (err){
+        console.log('Error in removing sound: '+err);
+        res.status(500);
+        res.send(JSON.stringify({err: err}));
+      }
+      fs.unlinkSync('./sound/' + sound.filename);
+      console.log('Sound remove was successful');
+      res.status(200);
+      res.json({status: 'OK'});
+    });
+  });
+
   /*************************************************
    ATTACHMENT
    *************************************************/
-  /* Upload an attachment */
-  router.post('/attachment/upload', attachmentUpload.single('file'), function(req, res, next) {
+  /* Upload an attachment POST */
+  router.post('/attachment/upload', isAuthenticated, attachmentUpload.single('file'), function(req, res, next) {
     var data = JSON.parse(req.body.data);
     var attachment = new Attachment();
 
@@ -393,7 +408,7 @@ module.exports = function(passport){
     attachment.ownerId = req.user._id;
     attachment.name = data.name;
 
-    attachment.save(function(err) {
+    attachment.save(function(err, savedAttachment) {
       if (err){
         console.log('Error in Saving attachment: '+err);
         res.status(500);
@@ -401,7 +416,22 @@ module.exports = function(passport){
       }
       console.log('Attachment save was successful');
       res.status(200);
-      res.json(attachment);
+      res.json(savedAttachment);
+    });
+  });
+
+  /* Delete an attachment by id DELETE */
+  router.delete('/attachment/delete/:id', isAuthenticated, function(req, res, next) {
+    Attachment.findOneAndRemove({ _id: req.params.id }, function(err, attachment) {
+      if (err){
+        console.log('Error in removing attachment: '+err);
+        res.status(500);
+        res.send(JSON.stringify({err: err}));
+      }
+      fs.unlinkSync('./attachments/' + attachment.filename);
+      console.log('Attachment remove was successful');
+      res.status(200);
+      res.json({status: 'OK'});
     });
   });
 

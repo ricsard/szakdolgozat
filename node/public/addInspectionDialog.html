@@ -30,14 +30,27 @@
                 <md-subheader>Upload sound</md-subheader>
                 <md-input-container>
                     <label>Filename</label>
-                    <input type="text" name="filename" ng-model="filename" required>
+                    <input type="text" name="filename" ng-model="soundFilename">
                 </md-input-container>
                 <md-input-container>
-                    <md-button class="md-raised md-primary" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="file" name="file">Select a sound file</md-button>
-                    <label>{{file.name}}</label>
+                    <label>Selected file name</label>
+                    <input type="text" name="attachmentName" ng-model="soundFile.name" ng-disabled="true">
                 </md-input-container>
                 <md-input-container>
-                    <md-button class="md-raised md-warn" type="submit">Upload</md-button>
+                    <md-button class="md-raised md-primary" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="soundFile" name="soundFile">Select a sound file</md-button>
+                </md-input-container>
+                <md-input-container>
+                    <span class="md-button md-raised md-warn" ng-click="uploadSound()">Upload</span>
+                </md-input-container>
+                <md-input-container ng-if="uploadedSounds.length > 0">
+                    <md-subheader>Uploaded sounds</md-subheader>
+                    <md-divider></md-divider>
+                    <md-list>
+                        <md-list-item ng-repeat="sound in uploadedSounds">
+                            <span class="flex">{{sound.name}}</span>
+                            <span class="md-button material-icons" ng-click="deleteSound(sound)">delete</span>
+                        </md-list-item>
+                    </md-list>
                 </md-input-container>
                 <md-divider></md-divider>
                 <!-- UPLOAD SOUNDS END -->
@@ -46,14 +59,27 @@
                 <md-subheader>Upload attachment(s)</md-subheader>
                 <md-input-container>
                     <label>Filename</label>
-                    <input type="text" name="attachmentName" ng-model="attachmentFilename" required>
+                    <input type="text" name="attachmentName" ng-model="attachmentFilename">
                 </md-input-container>
                 <md-input-container>
-                    <md-button class="md-raised md-primary" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="attachment" name="attachment">Select a file</md-button>
-                    <label>{{attachment.name}}</label>
+                    <label>Selected file name</label>
+                    <input type="text" name="attachmentName" ng-model="attachmentFile.name" ng-disabled="true">
                 </md-input-container>
                 <md-input-container>
-                    <md-button class="md-raised md-warn" ng-click="uploadAttachment()">Upload</md-button>
+                    <md-button class="md-raised md-primary" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="attachmentFile" name="attachmentFile">Select a file</md-button>
+                </md-input-container>
+                <md-input-container>
+                    <span class="md-button md-raised md-warn" ng-click="uploadAttachment()">Upload</span>
+                </md-input-container>
+                <md-input-container ng-if="uploadedAttachments.length > 0">
+                    <md-subheader>Uploaded attachments</md-subheader>
+                    <md-divider></md-divider>
+                    <md-list>
+                        <md-list-item ng-repeat="attachment in uploadedAttachments">
+                            <span class="flex">{{attachment.name}}</span>
+                            <span class="md-button material-icons" ng-click="deleteAttachment(attachment)">delete</span>
+                        </md-list-item>
+                    </md-list>
                 </md-input-container>
                 <md-divider></md-divider>
                 <!-- UPLOAD ATTACHMENTS END -->
