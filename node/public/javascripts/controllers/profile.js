@@ -27,6 +27,7 @@ app.controller('ProfileCtrl', function($scope, $http, $window, SessionService, U
         $mdDialog.show({
             clickOutsideToClose: true,
             scope: $scope,
+            preserveScope: true,
             templateUrl: '../../addInspectionDialog.html',
             controller: 'AddInspectionCtrl'
         }).then(function(answer) {
@@ -40,6 +41,10 @@ app.controller('ProfileCtrl', function($scope, $http, $window, SessionService, U
                     .content('Cancelled')
             );
         });
+    };
+
+    $scope.openInspectionPage = function(id) {
+        $window.location.href = '/inspection/' + id;
     };
 
     /**

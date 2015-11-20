@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<% include header.html %>
+<body ng-app="szakdolgozat" ng-controller="HomeCtrl">
+<% include topToolbar.ejs %>
+<!-- Hidden field for userId -->
+<input style="display: none" id="inspectionId" value="<%= inspectionId %>" />
+
+<div layout="column" ng-cloak style="height: 100%; overflow-y: scroll;">
+  <section layout="row" flex>
+    <% include leftSidebar.ejs %>
+    <md-content flex layout-padding ng-controller="InspectionPageCtrl">
+      <div layout="column" layout-fill layout-align="top center">
+        <md-toolbar>
+          <div class="md-toolbar-tools">
+            <h2>{{inspection.name}}</h2>
+          </div>
+        </md-toolbar>
+
+        <form name="newInspectionForm" ng-submit="updateInspection()">
+          <md-subheader>Inspection details</md-subheader>
+          <md-input-container>
+            <label>Name</label>
+            <input type="text" name="name" ng-model="inspection.name" ng-disabled="signedInUser.role !== 'doctor'" required>
+          </md-input-container>
+          <md-input-container>
+            <label>Diagnosis</label>
+            <textarea rows="4" name="diagnosis" ng-model="inspection.diagnosis" ng-disabled="signedInUser.role !== 'doctor'" required></textarea>
+          </md-input-container>
+          <md-input-container>
+            <label>Treatment</label>
+            <textarea rows="4" name="treatment" ng-model="inspection.treatment" ng-disabled="signedInUser.role !== 'doctor'" required></textarea>
+          </md-input-container>
+          <md-input-container>
+            <label>Comment</label>
+            <textarea rows="4" name="comment" ng-model="inspection.comment" ng-disabled="signedInUser.role !== 'doctor'" required></textarea>
+          </md-input-container>
+          <md-divider></md-divider>
+          <md-subheader>Upload sound</md-subheader>
+          <md-input-container>
+            <label>Filename</label>
+            <input type="text" name="filename" ng-model="filename" ng-disabled="signedInUser.role !== 'doctor'" required>
+          </md-input-container>
+          <md-input-container>
+            <md-button class="md-raised md-primary" ng-disabled="signedInUser.role !== 'doctor'" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="file" name="file">Select a sound file</md-button>
+            <label>{{file.name}}</label>
+          </md-input-container>
+          <md-input-container>
+            <md-button class="md-raised md-warn" type="submit" ng-disabled="signedInUser.role !== 'doctor'">Upload</md-button>
+          </md-input-container>
+          <md-divider></md-divider>
+          <md-subheader>Upload attachment(s)</md-subheader>
+          <md-input-container>
+            <md-button class="md-raised md-primary" ng-disabled="signedInUser.role !== 'doctor'" type="file" ngf-select ngf-multiple="false" ngf-select ng-model="file" name="file">Select a file</md-button>
+            <label>{{file.name}}</label>
+          </md-input-container>
+          <md-input-container>
+            <md-button class="md-raised md-warn" type="submit" ng-disabled="signedInUser.role !== 'doctor'">Upload</md-button>
+          </md-input-container>
+          <md-divider></md-divider>
+          <md-input-container>
+            <md-button class="md-raised" type="submit" ng-disabled="signedInUser.role !== 'doctor'">
+              <span>Update inspection</span>
+            </md-button>
+          </md-input-container>
+        </form>
+      </div>
+    </md-content>
+  </section>
+</div>
+</body>
+</html>

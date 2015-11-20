@@ -46,6 +46,29 @@ var hasResearcherLevel = function(req, res, next) {
   }
 };
 
+/**
+ * Send unauthorized message
+ * @param req
+ * @param res
+ */
+var sendUnauthorized = function(req, res) {
+  res.status(401);
+  res.json({error: "Unauthorized for this operation!"})
+};
+
+/**
+ * Send the err back as an error message
+ * @param req
+ * @param res
+ * @param msg
+ * @param err
+ */
+var sendError = function(req, res, msg, err) {
+  console.log(msg + ': '+err);
+  res.status(500);
+  res.json({err: err});
+};
+
 // Generates hash using bCrypt
 var createHash = function(password){
   return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
@@ -62,9 +85,7 @@ function searchUser(req, res, role) {
     User.find( searchObj,
         function(err,docs){
           if (err){
-            console.log('Error in searching user: '+err);
-            res.status(500);
-            res.send(JSON.stringify({err: err}));
+            sendError(req, res, 'Error in searching user', err);
           }
           for(var i = 0; i < docs.length; i++) {
             delete docs[i]._doc.password;
@@ -122,9 +143,7 @@ module.exports = function(passport){
       } else {
         user.save(function(err, savedUser) {
           if (err){
-            console.log('Error in add patient: '+err);
-            res.status(500);
-            res.json({err: err});
+            sendError(req, res, 'Error in add patient', err);
           }
           console.log('Patient add was successful');
           res.status(200);
@@ -158,9 +177,7 @@ module.exports = function(passport){
   router.get('/user/data/:id', isAuthenticated, hasDoctorLevel, function(req, res) {
     User.findOne({_id: req.params.id}, function (err, user) {
       if (err){
-        console.log('Error in querying user: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in querying user', err);
       }
       delete user._doc.password;
       res.status(200);
@@ -206,9 +223,7 @@ module.exports = function(passport){
 
     inspection.save(function(err, savedInspection) {
       if (err){
-        console.log('Error in add inspection: '+err);
-        res.status(500);
-        res.json({err: err});
+        sendError(req, res, 'Error in add inspection', err);
       }
       console.log('Inspection add was successful');
       res.status(200);
@@ -217,12 +232,13 @@ module.exports = function(passport){
   });
 
   /* List inspections for a user GET */
-  router.get('/inspection/list/:userId', isAuthenticated, hasDoctorLevel, function(req, res) {
+  router.get('/inspection/list/:userId', isAuthenticated, function(req, res) {
+    if(req.user.role === 'patient' && req.user._id != req.params.userId) {
+      sendUnauthorized(req, res);
+    }
     Inspection.find({ userId: req.params.userId }, function(err, inspections) {
       if (err){
-        console.log('Error in list inspections: '+err);
-        res.status(500);
-        res.json({err: err});
+        sendError(req, res, 'Error in list inspections', err);
       }
       console.log('Inspections list was successful');
       res.status(200);
@@ -230,6 +246,40 @@ module.exports = function(passport){
     });
   });
 
+  /* Get inspection by id GET */
+  router.get('/inspection/:id', isAuthenticated, function(req, res) {
+    res.render('inspectionPage', { inspectionId: req.params.id })
+  });
+
+  /* Get inspection data by id GET */
+  router.get('/inspection/data/:id', isAuthenticated, function(req, res) {
+    if(req.user.role === 'patient' && req.user._id != req.params.userId) {
+      sendUnauthorized(req, res);
+    }
+    Inspection.findOne({ _id: req.params.id }, function(err, inspection) {
+      if (err){
+        sendError(req, res, 'Error in get inspection', err);
+      }
+      console.log('Inspection get was successful');
+      res.status(200);
+      res.json(inspection);
+    });
+  });
+
+  /* Update inspection by id POST */
+  router.post('/inspection/update/:id', isAuthenticated, function(req, res) {
+    if(req.user.role === 'patient' && req.user._id != req.params.userId) {
+      sendUnauthorized(req, res);
+    }
+    Inspection.findOneAndUpdate({ _id: req.params.id }, req.body, function(err, updInspection) {
+      if (err){
+        sendError(req, res, 'Error in update inspection', err);
+      }
+      console.log('Inspection update was successful');
+      res.status(200);
+      res.json(updInspection);
+    });
+  });
 
   /*************************************************
    SOUND

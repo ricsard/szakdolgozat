@@ -52,7 +52,7 @@
             <md-list-item ng-if="inspections.length == 0">
               <p>There's no inspections yet</p>
             </md-list-item>
-            <md-list-item ng-repeat="inspection in inspections">
+            <md-list-item ng-repeat="inspection in inspections" ng-click="openInspectionPage(inspection.inspectionId)">
               <p>{{ inspection.name }}</p>
             </md-list-item>
             <md-divider></md-divider>
