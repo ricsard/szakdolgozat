@@ -4,8 +4,14 @@
   <body ng-app="szakdolgozat" ng-controller="RegisterCtrl">
     <md-content class="md-padding">
        <md-card>
+         <md-toolbar>
+           <div class="md-toolbar-tools">
+             <h2>
+               <span>Register</span>
+             </h2>
+           </div>
+         </md-toolbar>
          <md-card-content>
-           <h2 class="md-title">Registration</h2>
            <form name="registerForm" ng-submit="sendRegister()">
              <md-input-container>
                <label>First Name</label>

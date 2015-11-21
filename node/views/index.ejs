@@ -2,12 +2,16 @@
 <html>
   <% include header.html %>
   <body ng-app="szakdolgozat" ng-controller="LoginCtrl">
-    <h1><%= title %></h1>
-
     <md-content class="md-padding">
       <md-card>
+        <md-toolbar>
+          <div class="md-toolbar-tools">
+            <h2>
+              <span>Login</span>
+            </h2>
+          </div>
+        </md-toolbar>
         <md-card-content>
-          <h2 class="md-title">Login</h2>
           <form name="registerForm" ng-submit="sendLogin()">
             <md-input-container>
               <label>Username</label>
@@ -17,10 +21,10 @@
               <label>Password</label>
               <input type="password" name="password" ng-model="loginObj.password" required>
             </md-input-container>
-            <md-button type="submit">Login</md-button>
+            <input class="md-button" type="submit" value="Login" />
+            <input class="md-button" ng-click="goToRegister()" value="Register" />
 
           </form>
-          <md-button ng-click="goToRegister()">Register</md-button>
         </md-card-content>
       </md-card>
     </md-content>

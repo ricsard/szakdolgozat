@@ -3,12 +3,34 @@ var router = express.Router();
 var multer = require('multer');
 var path = require('path');
 
-var multerUp = multer({ dest: './sound/' });
-var attachmentUpload = multer({ dest: './attachments/' });
+var mime = require('mime');
+var shortid = require('shortid');
+
+var soundStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './sound/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, shortid.generate() + '.' + mime.extension(file.mimetype));
+  }
+});
+var multerUp = multer({ storage: soundStorage });
+
+var attStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './attachments/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, shortid.generate() + '.' + mime.extension(file.mimetype));
+  }
+});
+var attachmentUpload = multer({ storage: attStorage });
+
 var Sound = require('../models/sound');
 var User = require('../models/user');
 var Inspection = require('../models/inspection');
 var Attachment = require('../models/attachment');
+
 var fs = require('fs');
 var bCrypt = require('bcrypt-nodejs');
 
@@ -79,10 +101,11 @@ var createHash = function(password){
 
 function searchUser(req, res, role) {
   if(req.body.search != '' && req.body.search != undefined) {
+    var searchObj = {};
     if(role != undefined) {
-      var searchObj = { role: role, $or:[ {'firstName': new RegExp(req.body.search, "i")}, {'lastName': new RegExp(req.body.search, "i")} ]}
+      searchObj = { role: role, $or:[ {'firstName': new RegExp(req.body.search, "i")}, {'lastName': new RegExp(req.body.search, "i")} ]}
     } else {
-      var searchObj ={ $or:[ {'firstName': new RegExp(req.body.search, "i")}, {'lastName': new RegExp(req.body.search, "i")} ]}
+      searchObj ={ $or:[ {'firstName': new RegExp(req.body.search, "i")}, {'lastName': new RegExp(req.body.search, "i")} ]}
     }
 
     User.find( searchObj,
@@ -307,7 +330,7 @@ module.exports = function(passport){
   /*************************************************
    SOUND
    *************************************************/
-  /* Upload a sound */
+  /* Upload a sound POST */
   router.post('/sound/upload', isAuthenticated, multerUp.single('file'), function(req, res, next) {
     var data = JSON.parse(req.body.data);
     var sound = new Sound();
@@ -354,7 +377,7 @@ module.exports = function(passport){
     });
   });
 
-  /* Get one sound metadata by id */
+  /* Get one sound metadata by id GET */
   router.get('/sound/:id', isAuthenticated, function(req, res) {
     Sound.findOne({_id: req.params.id}, function (err, sound) {
       if (err){
@@ -367,7 +390,7 @@ module.exports = function(passport){
     });
   });
 
-  /* Get one soundFile by id */
+  /* Get one soundFile by id GET */
   router.get('/sound/file/:id', isAuthenticated, function(req, res) {
     Sound.findOne({_id: req.params.id}, function (err, sound) {
       if (err){
@@ -417,6 +440,32 @@ module.exports = function(passport){
       console.log('Attachment save was successful');
       res.status(200);
       res.json(savedAttachment);
+    });
+  });
+
+  /* Get one attachment metadata by id GET */
+  router.get('/attachment/:id', isAuthenticated, function(req, res) {
+    Attachment.findOne({_id: req.params.id}, function (err, attachment) {
+      if (err){
+        console.log('Error in querying attachment: '+err);
+        res.status(500);
+        res.send(JSON.stringify({err: err}));
+      }
+      res.status(200);
+      res.send(attachment);
+    });
+  });
+
+  /* Get one attachmentFile by id GET */
+  router.get('/attachment/file/:id', isAuthenticated, function(req, res) {
+    Attachment.findOne({_id: req.params.id}, function (err, attachment) {
+      if (err){
+        console.log('Error in getting attachment: '+err);
+        res.status(500);
+        res.send(JSON.stringify({err: err}));
+      } else {
+        res.sendFile(path.join(__dirname, '../attachments', attachment.filename));
+      }
     });
   });
 
