@@ -13,7 +13,7 @@ app.controller('InspectionPageCtrl', function($scope, $http, $window, SessionSer
     getActualInspection();
 
     /**
-     * Get the actual inspection
+     * Get the actual inspection with the sounds and attachments
      */
     function getActualInspection() {
         $http.get('/inspection/data/' + $scope.inspectionId)
@@ -62,6 +62,9 @@ app.controller('InspectionPageCtrl', function($scope, $http, $window, SessionSer
         });
     }
 
+    /**
+     * Get inspection's sounds metadata
+     */
     function getSoundsMetadata() {
         _.each($scope.inspection.sounds, function(id) {
             $http.get('/sound/' + id)

@@ -15,13 +15,19 @@ app.controller('AddInspectionCtrl', function($scope, $http, $window, Upload, Ses
     $scope.attachmentFilename = '';
     $scope.uploadedAttachments = [];
 
+    /**
+     * Save the inspection for the user with every field, and update the inspections array of the
+     * parent controller, to be up to date after the dialog disappears
+     */
     $scope.saveInspection = function () {
         $scope.inspection.userId = $scope.profileUserId;
 
+        // We will save only the ids of the uploaded sounds for the inspection
         _.each($scope.uploadedSounds, function(element) {
             $scope.inspection.sounds.push(element._id);
         });
 
+        // We will save only the ids of the uploaded attachments for the inspection
         _.each($scope.uploadedAttachments, function(element) {
             $scope.inspection.attachments.push(element._id);
         });
@@ -41,6 +47,9 @@ app.controller('AddInspectionCtrl', function($scope, $http, $window, Upload, Ses
             });
     };
 
+    /**
+     * Upload the selected soundFile
+     */
     $scope.uploadSound = function () {
         if($scope.soundFilename != '' && $scope.soundFilename != undefined) {
             uploadFile('/sound/upload', $scope.soundFilename, $scope.soundFile, function(resp) {
@@ -51,6 +60,10 @@ app.controller('AddInspectionCtrl', function($scope, $http, $window, Upload, Ses
         }
     };
 
+    /**
+     * Delete the selected soundFile
+     * @param sound
+     */
     $scope.deleteSound = function (sound) {
         $http.delete('/sound/delete/' + sound._id)
             .success(function(data) {
@@ -63,6 +76,9 @@ app.controller('AddInspectionCtrl', function($scope, $http, $window, Upload, Ses
             });
     };
 
+    /**
+     * Upload the selected attachmentFile
+     */
     $scope.uploadAttachment = function () {
         if($scope.attachmentFilename != '' && $scope.attachmentFilename != undefined) {
             uploadFile('/attachment/upload', $scope.attachmentFilename, $scope.attachmentFile, function(resp) {
@@ -73,6 +89,10 @@ app.controller('AddInspectionCtrl', function($scope, $http, $window, Upload, Ses
         }
     };
 
+    /**
+     * Delete the selected attachmentFile
+     * @param attachment
+     */
     $scope.deleteAttachment = function (attachment) {
         $http.delete('/attachment/delete/' + attachment._id)
             .success(function(data) {
@@ -85,6 +105,13 @@ app.controller('AddInspectionCtrl', function($scope, $http, $window, Upload, Ses
             });
     };
 
+    /**
+     * Upload file stub
+     * @param {String} path
+     * @param {String} fileName
+     * @param {Object} file
+     * @param {Function} successCallback
+     */
     function uploadFile(path, fileName, file, successCallback) {
         Upload.upload({
             url: path,

@@ -38,7 +38,12 @@ app.factory( "User", function() {
         }
     }
 
+    /**
+     * Prototypical functions
+     * @type {{transformToSend: Function, getFullName: Function}}
+     */
     User.prototype = {
+        //Delete the userId before we send for add
         transformToSend: function() {
             var tmp = angular.copy(this);
             delete tmp.userId;
@@ -48,8 +53,6 @@ app.factory( "User", function() {
             return this.firstName + " " + this.lastName;
         }
     };
-
-    User.noop = function() {};
 
     return( User );
 

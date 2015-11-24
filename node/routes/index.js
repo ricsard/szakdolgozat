@@ -274,7 +274,22 @@ module.exports = function(passport){
 
   /* Get inspection by id GET */
   router.get('/inspection/:id', isAuthenticated, function(req, res) {
-    res.render('inspectionPage', { inspectionId: req.params.id })
+    Inspection.findOne({ _id: req.params.id }, function(err, inspection) {
+      if (err){
+        sendError(req, res, 'Error in get inspections', err);
+      } else {
+        console.log('Inspections get was successful');
+
+        Sound.find({ _id: { $in: inspection.sounds } }, function(err, sounds) {
+          if (err){
+            sendError(req, res, 'Error in get inspections', err);
+          } else {
+            res.status(200);
+            res.render('inspectionPage', { inspectionId: req.params.id, sounds: sounds })
+          }
+        });
+      }
+    });
   });
 
   /* Get inspection data by id GET */

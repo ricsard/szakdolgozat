@@ -8,14 +8,14 @@
     <% include leftSidebar.ejs %>
     <md-content flex layout-padding ng-controller="MyPatientsCtrl">
       <div layout="column" layout-fill layout-align="top center">
-        <!--<md-input-container>-->
-          <!--<label>Search user</label>-->
-          <!--<input ng-model="search.text" type="text" />-->
-        <!--</md-input-container>-->
+        <md-input-container>
+          <label>Search in your patients</label>
+          <input ng-model="search.text" type="text" />
+        </md-input-container>
         <md-divider></md-divider>
         <md-subheader ng-if="myPatients.length == 0">You don't have any patients yet</md-subheader>
         <md-list>
-          <md-list-item ng-repeat="user in myPatients" ng-click="openProfilePage(user.userId)">
+          <md-list-item ng-repeat="user in myPatients | filter: userFilter" ng-click="openProfilePage(user.userId)">
             <md-button class="md-fab md-primary" aria-label="{{ user.getFullName() }}">
               {{user.firstName[0]}}
             </md-button>

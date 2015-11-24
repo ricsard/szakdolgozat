@@ -40,10 +40,15 @@
             <md-subheader>Uploaded sounds</md-subheader>
             <md-divider></md-divider>
             <md-list>
-              <md-list-item ng-repeat="sound in sounds">
-                <span class="flex">{{sound.name}}</span>
-                <span class="md-button material-icons" ng-click="">delete</span>
+              <% for(var i=0; i<sounds.length; i++) {%>
+              <md-list-item>
+                <span class="flex"><%=sounds[i].name%></span>
+                <audio controls="controls" preload="none">
+                  <source ng-src="/sound/file/<%= sounds[i]._id %>" type="<%=sounds[i].mimetype%>">
+                  Your browser does not support the audio element.
+                </audio>
               </md-list-item>
+              <% } %>
             </md-list>
           </md-input-container>
           <md-divider></md-divider>

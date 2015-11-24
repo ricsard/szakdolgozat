@@ -43,7 +43,12 @@ var app = angular.module('szakdolgozat');
             }
         }
 
+        /**
+         * Prototypical functions
+         * @type {{transformToSend: Function}}
+         */
         Inspection.prototype = {
+            //Delete the inspectionId before we send for add
             transformToSend: function() {
                 var tmp = angular.copy(this);
                 delete tmp.inspectionId;
