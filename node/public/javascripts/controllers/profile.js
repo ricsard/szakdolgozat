@@ -2,7 +2,7 @@
  * Created by Ricsard on 2015. 11. 02..
  */
 var app = angular.module('szakdolgozat');
-app.controller('ProfileCtrl', function($scope, $http, $window, SessionService, User, $mdToast, $mdDialog, Inspection){
+app.controller('ProfileCtrl', function($scope, $http, $window, User, $mdToast, $mdDialog, Inspection){
 
     $scope.profileUserId = document.getElementById('userId').value;
     $scope.activeTab = 'profile';

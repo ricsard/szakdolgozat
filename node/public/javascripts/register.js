@@ -8,10 +8,11 @@ app.controller('RegisterCtrl', function($scope, $http, $window){
     $scope.regObj.gender = 'female';
     $scope.regObj.role = 'doctor';
 
+    /**
+     * Send register request and if it was successful relocate to the path
+     * in the response
+     */
     $scope.sendRegister = function() {
-        console.log("REG");
-        console.log($scope.regObj);
-
         $scope.regObj.doctors = [];
         $http.post('/signup', $scope.regObj)
             .success(function(data) {
@@ -23,6 +24,10 @@ app.controller('RegisterCtrl', function($scope, $http, $window){
             })
     };
 
+    /**
+     * Handler for gender change
+     * @param {String} it
+     */
     $scope.genderOnChange = function (it) {
         if(it) {
             $scope.regObj.gender = 'male';
@@ -31,6 +36,10 @@ app.controller('RegisterCtrl', function($scope, $http, $window){
         }
     };
 
+    /**
+     * Handler for role change
+     * @param {String} it
+     */
     $scope.roleOnChange = function (it) {
         if(it) {
             $scope.regObj.role = 'researcher';

@@ -2,11 +2,7 @@
  * Created by Ricsard on 2015. 11. 02..
  */
 var app = angular.module('szakdolgozat');
-app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast, SessionService){
-
-    $scope.sounds = [];
-    //getSounds();
-
+app.controller('HomeCtrl', function($scope, $http, $window, SessionService){
 
     $scope.signedInUser = SessionService.getSignedInUser();
     $scope.menu = [];
@@ -17,17 +13,20 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast,
         message: "Override this method"
     };
 
-    function or() {
+    function orM() {
         throw OverrideException;
     }
 
+    /**
+     * Set up the left side menu along the signed in user role
+     */
     function setupMenu() {
         if($scope.signedInUser.role === 'patient') {
             $scope.menu.push({
                 subheader: 'Patient menu',
                 elements: [
                     {title: "Search doctor", click: openSearchUser},
-                    {title: "Menu2", click: or}
+                    {title: "Menu2", click: orM}
                 ]
             });
         } else if($scope.signedInUser.role === 'doctor') {
@@ -44,8 +43,8 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast,
             $scope.menu.push({
                 subheader: 'Researcher menu',
                 elements: [
-                    {title: "Menu1", click: or},
-                    {title: "Menu2", click: or}
+                    {title: "Menu1", click: orM},
+                    {title: "Menu2", click: orM}
                 ]
             });
         }
@@ -67,54 +66,10 @@ app.controller('HomeCtrl', function($scope, $http, $window, $mdDialog, $mdToast,
         $window.location.href = '/sounds';
     }
 
-    //function getSounds() {
-    //    $http.get('/sound')
-    //        .success(function(data) {
-    //            console.log(data);
-    //            $scope.sounds = data;
-    //        })
-    //        .error(function(err) {
-    //            console.log(err);
-    //        })
-    //}
-    //
-    //$scope.getSound = function (sound) {
-    //    $http.get('/sound/file/' + sound._id)
-    //        .success(function(data) {
-    //            console.log(data);
-    //        })
-    //        .error(function(err) {
-    //            console.log(err);
-    //        })
-    //};
-    //
-    //
-    //
-    //$scope.uploadAudio = function () {
-    //    $mdDialog.show({
-    //        //parent: parentEl,
-    //        //targetEvent: $event,
-    //        clickOutsideToClose: true,
-    //        templateUrl: './uploadDialog.html',
-    //        //locals: {
-    //        //    items: $scope.items
-    //        //},
-    //        controller: 'UploadDialogController'
-    //    }).then(function(answer) {
-    //        $mdToast.show(
-    //            $mdToast.simple()
-    //                .content(answer)
-    //        );
-    //    }, function() {
-    //        $mdToast.show(
-    //            $mdToast.simple()
-    //                .content('Cancelled')
-    //        );
-    //    });
-    //};
-    
+    /**
+     * Logout the signed in user
+     */
     $scope.logout = function() {
-        console.log("LOGOUT");
         $http.get('/signout')
             .success(function(data) {
                 console.log(data);

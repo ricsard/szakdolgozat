@@ -2,7 +2,7 @@
  * Created by Ricsard on 2015. 11. 02..
  */
 var app = angular.module('szakdolgozat');
-app.controller('AddInspectionCtrl', function($scope, $http, $window, Upload, SessionService, $mdDialog, $mdToast, Inspection){
+app.controller('AddInspectionCtrl', function($scope, $http, Upload, $mdDialog, Inspection){
 
     $scope.inspection = new Inspection();
     console.log($scope.profileUserId);

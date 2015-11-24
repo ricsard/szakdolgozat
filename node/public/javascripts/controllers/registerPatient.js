@@ -2,15 +2,15 @@
  * Created by Ricsard on 2015. 11. 02..
  */
 var app = angular.module('szakdolgozat');
-app.controller('RegisterPatientCtrl', function($scope, $http, $window, SessionService, $mdToast){
+app.controller('RegisterPatientCtrl', function($scope, $http, SessionService, $mdToast){
 
     $scope.patient = {};
     $scope.patient.gender = 'female';
 
+    /**
+     * Register a patient for a doctor
+     */
     $scope.registerPatient = function() {
-        console.log("REGISTER PATIENT");
-        console.log($scope.patient);
-
         $scope.patient.role = 'patient';
         $scope.patient.doctors = [];
         $scope.patient.doctors.push(SessionService.getSignedInUserId());
@@ -25,6 +25,10 @@ app.controller('RegisterPatientCtrl', function($scope, $http, $window, SessionSe
             })
     };
 
+    /**
+     * Handler function for gender selector
+     * @param {String} it
+     */
     $scope.genderOnChange = function (it) {
         if(it) {
             $scope.patient.gender = 'male';

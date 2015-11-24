@@ -2,7 +2,7 @@
  * Created by Ricsard on 2015. 11. 02..
  */
 var app = angular.module('szakdolgozat');
-app.controller('InspectionPageCtrl', function($scope, $http, $window, SessionService, User, $mdToast, Inspection){
+app.controller('InspectionPageCtrl', function($scope, $http, $window, SessionService, $mdToast, Inspection){
 
     $scope.inspectionId = document.getElementById('inspectionId').value;
     $scope.inspection = {};

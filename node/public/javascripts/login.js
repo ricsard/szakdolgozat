@@ -6,6 +6,9 @@ app.controller('LoginCtrl', function($scope, $http, $window, SessionService){
 
     $scope.loginObj = {};
 
+    /**
+     * Send login request, and it was successful redirect to the home page
+     */
     $scope.sendLogin = function() {
         console.log("LOGIN");
         console.log($scope.loginObj);
@@ -21,6 +24,9 @@ app.controller('LoginCtrl', function($scope, $http, $window, SessionService){
             })
     };
 
+    /**
+     * Relocate to the sign up page
+     */
     $scope.goToRegister = function () {
         $window.location.href = '/signup';
     };
