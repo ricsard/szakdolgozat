@@ -108,16 +108,16 @@ function searchUser(req, res, role) {
       searchObj ={ $or:[ {'firstName': new RegExp(req.body.search, "i")}, {'lastName': new RegExp(req.body.search, "i")} ]}
     }
 
-    User.find( searchObj,
-        function(err,docs){
-          if (err){
-            sendError(req, res, 'Error in searching user', err);
-          }
-          for(var i = 0; i < docs.length; i++) {
-            delete docs[i]._doc.password;
-          }
-          res.json({result: docs});
-        });
+    User.find( searchObj, function(err,docs){
+      if (err){
+        sendError(req, res, 'Error in searching user', err);
+      } else {
+        for(var i = 0; i < docs.length; i++) {
+          delete docs[i]._doc.password;
+        }
+        res.json({result: docs});
+      }
+    });
   } else {
     res.json({result: []});
   }
@@ -127,7 +127,6 @@ module.exports = function(passport){
 
   /* GET login page. */
   router.get('/', function(req, res) {
-    // Display the Login page with any flash message, if any
     res.render('index', { title: 'Thesis' });
   });
 
@@ -170,10 +169,11 @@ module.exports = function(passport){
         user.save(function(err, savedUser) {
           if (err){
             sendError(req, res, 'Error in add patient', err);
+          } else {
+            console.log('Patient add was successful');
+            res.status(200);
+            res.json(savedUser);
           }
-          console.log('Patient add was successful');
-          res.status(200);
-          res.json(savedUser);
         });
       }
     });
@@ -204,10 +204,11 @@ module.exports = function(passport){
     User.findOne({_id: req.params.id}, function (err, user) {
       if (err){
         sendError(req, res, 'Error in querying user', err);
+      } else {
+        delete user._doc.password;
+        res.status(200);
+        res.send(user);
       }
-      delete user._doc.password;
-      res.status(200);
-      res.send(user);
     });
   });
 
@@ -250,10 +251,11 @@ module.exports = function(passport){
     inspection.save(function(err, savedInspection) {
       if (err){
         sendError(req, res, 'Error in add inspection', err);
+      } else {
+        console.log('Inspection add was successful');
+        res.status(200);
+        res.json(savedInspection);
       }
-      console.log('Inspection add was successful');
-      res.status(200);
-      res.json(savedInspection);
     });
   });
 
@@ -265,10 +267,11 @@ module.exports = function(passport){
     Inspection.find({ userId: req.params.userId }, function(err, inspections) {
       if (err){
         sendError(req, res, 'Error in list inspections', err);
+      } else {
+        console.log('Inspections list was successful');
+        res.status(200);
+        res.json({results: inspections});
       }
-      console.log('Inspections list was successful');
-      res.status(200);
-      res.json({results: inspections});
     });
   });
 
@@ -300,10 +303,11 @@ module.exports = function(passport){
     Inspection.findOne({ _id: req.params.id }, function(err, inspection) {
       if (err){
         sendError(req, res, 'Error in get inspection', err);
+      } else {
+        console.log('Inspection get was successful');
+        res.status(200);
+        res.json(inspection);
       }
-      console.log('Inspection get was successful');
-      res.status(200);
-      res.json(inspection);
     });
   });
 
@@ -315,10 +319,11 @@ module.exports = function(passport){
     Inspection.findOneAndUpdate({ _id: req.params.id }, req.body, function(err, updInspection) {
       if (err){
         sendError(req, res, 'Error in update inspection', err);
+      } else {
+        console.log('Inspection update was successful');
+        res.status(200);
+        res.json(updInspection);
       }
-      console.log('Inspection update was successful');
-      res.status(200);
-      res.json(updInspection);
     });
   });
 
@@ -335,10 +340,11 @@ module.exports = function(passport){
     User.find({ doctors: req.user._id }, function(err, patients) {
       if (err){
         sendError(req, res, 'Error in list myPatients', err);
+      } else {
+        console.log('MyPatients list was successful');
+        res.status(200);
+        res.json({results: patients});
       }
-      console.log('MyPatients list was successful');
-      res.status(200);
-      res.json({results: patients});
     });
   });
 
@@ -357,13 +363,12 @@ module.exports = function(passport){
 
     sound.save(function(err) {
       if (err){
-        console.log('Error in Saving sound: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in Saving sound', err);
+      } else {
+        console.log('Sound save was successful');
+        res.status(200);
+        res.json(sound);
       }
-      console.log('Sound save was successful');
-      res.status(200);
-      res.send(JSON.stringify(sound));
     });
   });
 
@@ -371,11 +376,10 @@ module.exports = function(passport){
   router.get('/sounds', isAuthenticated, function(req, res) {
     Sound.find({}, function (err, sounds) {
       if (err){
-        console.log('Error in querying sound: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in querying sound', err);
+      } else {
+        res.render('soundsList', {sounds: sounds});
       }
-      res.render('soundsList', {sounds: sounds});
     });
   });
 
@@ -383,12 +387,11 @@ module.exports = function(passport){
   router.get('/sound/list', isAuthenticated, function(req, res) {
     Sound.find({}, function (err, sounds) {
       if (err){
-        console.log('Error in querying sound: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in querying sound', err);
+      } else {
+        res.status(200);
+        res.json(sounds);
       }
-      res.status(200);
-      res.json(sounds);
     });
   });
 
@@ -396,12 +399,11 @@ module.exports = function(passport){
   router.get('/sound/:id', isAuthenticated, function(req, res) {
     Sound.findOne({_id: req.params.id}, function (err, sound) {
       if (err){
-        console.log('Error in querying sound: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in querying sound', err);
+      } else {
+        res.status(200);
+        res.send(sound);
       }
-      res.status(200);
-      res.send(sound);
     });
   });
 
@@ -409,9 +411,7 @@ module.exports = function(passport){
   router.get('/sound/file/:id', isAuthenticated, function(req, res) {
     Sound.findOne({_id: req.params.id}, function (err, sound) {
       if (err){
-        console.log('Error in querying sound: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in querying sound', err);
       } else {
         res.sendFile(path.join(__dirname, '../sound', sound.filename));
       }
@@ -422,14 +422,13 @@ module.exports = function(passport){
   router.delete('/sound/delete/:id', isAuthenticated, function(req, res, next) {
     Sound.findOneAndRemove({ _id: req.params.id }, function(err, sound) {
       if (err){
-        console.log('Error in removing sound: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in removing sound', err);
+      } else {
+        fs.unlinkSync('./sound/' + sound.filename);
+        console.log('Sound remove was successful');
+        res.status(200);
+        res.json({status: 'OK'});
       }
-      fs.unlinkSync('./sound/' + sound.filename);
-      console.log('Sound remove was successful');
-      res.status(200);
-      res.json({status: 'OK'});
     });
   });
 
@@ -448,13 +447,12 @@ module.exports = function(passport){
 
     attachment.save(function(err, savedAttachment) {
       if (err){
-        console.log('Error in Saving attachment: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in Saving attachment', err);
+      } else {
+        console.log('Attachment save was successful');
+        res.status(200);
+        res.json(savedAttachment);
       }
-      console.log('Attachment save was successful');
-      res.status(200);
-      res.json(savedAttachment);
     });
   });
 
@@ -462,12 +460,11 @@ module.exports = function(passport){
   router.get('/attachment/:id', isAuthenticated, function(req, res) {
     Attachment.findOne({_id: req.params.id}, function (err, attachment) {
       if (err){
-        console.log('Error in querying attachment: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in querying attachment', err);
+      } else {
+        res.status(200);
+        res.send(attachment);
       }
-      res.status(200);
-      res.send(attachment);
     });
   });
 
@@ -475,9 +472,7 @@ module.exports = function(passport){
   router.get('/attachment/file/:id', isAuthenticated, function(req, res) {
     Attachment.findOne({_id: req.params.id}, function (err, attachment) {
       if (err){
-        console.log('Error in getting attachment: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in getting attachment', err);
       } else {
         res.sendFile(path.join(__dirname, '../attachments', attachment.filename));
       }
@@ -488,14 +483,13 @@ module.exports = function(passport){
   router.delete('/attachment/delete/:id', isAuthenticated, function(req, res, next) {
     Attachment.findOneAndRemove({ _id: req.params.id }, function(err, attachment) {
       if (err){
-        console.log('Error in removing attachment: '+err);
-        res.status(500);
-        res.send(JSON.stringify({err: err}));
+        sendError(req, res, 'Error in removing attachment', err);
+      } else {
+        fs.unlinkSync('./attachments/' + attachment.filename);
+        console.log('Attachment remove was successful');
+        res.status(200);
+        res.json({status: 'OK'});
       }
-      fs.unlinkSync('./attachments/' + attachment.filename);
-      console.log('Attachment remove was successful');
-      res.status(200);
-      res.json({status: 'OK'});
     });
   });
 
