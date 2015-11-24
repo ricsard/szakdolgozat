@@ -2,3 +2,13 @@
 
 ### Yeoman ###
 node_modules/
+
+### Idea ###
+/.idea
+/public/.sass-cache
+
+### Project related ###
+/attachments
+/sound
+/upload
+/public/stylesheets/*.css
