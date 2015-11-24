@@ -26,7 +26,7 @@ app.controller('HomeCtrl', function($scope, $http, $window, SessionService){
                 subheader: 'Patient menu',
                 elements: [
                     {title: "Search doctor", click: openSearchUser},
-                    {title: "Menu2", click: orM}
+                    {title: "My profile", click: openMyProfile}
                 ]
             });
         } else if($scope.signedInUser.role === 'doctor') {
@@ -64,6 +64,10 @@ app.controller('HomeCtrl', function($scope, $http, $window, SessionService){
 
     function openSounds() {
         $window.location.href = '/sounds';
+    }
+
+    function openMyProfile() {
+        $window.location.href = '/user/' + SessionService.getSignedInUserId();
     }
 
     /**

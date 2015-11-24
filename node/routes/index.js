@@ -195,12 +195,12 @@ module.exports = function(passport){
    USER
    *************************************************/
   /* User profile page GET */
-  router.get('/user/:id', isAuthenticated, hasDoctorLevel, function(req, res) {
-    res.render('profilePage', { userId: req.params.id });
+  router.get('/user/:id', isAuthenticated, function(req, res) {
+    res.render('profilePage', { userId: req.params.id, signedInUser: req.user });
   });
 
   /* User data GET */
-  router.get('/user/data/:id', isAuthenticated, hasDoctorLevel, function(req, res) {
+  router.get('/user/data/:id', isAuthenticated, function(req, res) {
     User.findOne({_id: req.params.id}, function (err, user) {
       if (err){
         sendError(req, res, 'Error in querying user', err);
@@ -288,7 +288,7 @@ module.exports = function(passport){
             sendError(req, res, 'Error in get inspections', err);
           } else {
             res.status(200);
-            res.render('inspectionPage', { inspectionId: req.params.id, sounds: sounds })
+            res.render('inspectionPage', { inspectionId: req.params.id, sounds: sounds, signedInUser: req.user })
           }
         });
       }
@@ -297,25 +297,26 @@ module.exports = function(passport){
 
   /* Get inspection data by id GET */
   router.get('/inspection/data/:id', isAuthenticated, function(req, res) {
-    if(req.user.role === 'patient' && req.user._id != req.params.userId) {
-      sendUnauthorized(req, res);
-    }
-    Inspection.findOne({ _id: req.params.id }, function(err, inspection) {
-      if (err){
-        sendError(req, res, 'Error in get inspection', err);
-      } else {
-        console.log('Inspection get was successful');
-        res.status(200);
-        res.json(inspection);
-      }
-    });
+    //if(req.user.role === 'patient' && req.user._id != req.params.userId) {
+    //  sendUnauthorized(req, res);
+    //} else {
+      Inspection.findOne({ _id: req.params.id }, function(err, inspection) {
+        if (err){
+          sendError(req, res, 'Error in get inspection', err);
+        } else {
+          console.log('Inspection get was successful');
+          res.status(200);
+          res.json(inspection);
+        }
+      });
+    //}
   });
 
   /* Update inspection by id POST */
   router.post('/inspection/update/:id', isAuthenticated, function(req, res) {
-    if(req.user.role === 'patient' && req.user._id != req.params.userId) {
-      sendUnauthorized(req, res);
-    }
+    //if(req.user.role === 'patient' && req.user._id != req.params.userId) {
+    //  sendUnauthorized(req, res);
+    //}
     Inspection.findOneAndUpdate({ _id: req.params.id }, req.body, function(err, updInspection) {
       if (err){
         sendError(req, res, 'Error in update inspection', err);

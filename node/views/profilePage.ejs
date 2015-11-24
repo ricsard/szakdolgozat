@@ -42,10 +42,12 @@
         </form>
 
         <div ng-if="activeTab === 'inspections'">
+          <% if(signedInUser.role == 'doctor') { %>
           <md-button style="width: 100%;" ng-click="addNewInspection()">
             <span>Add new inspection</span>
           </md-button>
           <md-divider></md-divider>
+          <% } %>
           <md-subheader class="md-primary">Existing inspections</md-subheader>
           <md-divider></md-divider>
           <md-list>
